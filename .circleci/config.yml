@@ -36,7 +36,9 @@ jobs:
 
       - persist_to_workspace:
           root: .
-          paths: node_modules
+          paths:
+            - node_modules
+            - config/datastores.js
 
   deploy-staging-job:
     docker:
