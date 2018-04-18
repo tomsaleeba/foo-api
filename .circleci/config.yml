@@ -28,13 +28,19 @@ jobs:
         
       # run tests!
       - run: yarn test
+
+      - run:
+          name: Monkey patched env var usage so you don't have to buy Apex UP Pro *just* to run this demo
+          # you can find out about UP Pro at https://up.docs.apex.sh/#guides.subscribing_to_up_pro
+          command: sed -i "s+process.env.MONGO_URL+'$MONGO_URL'+" config/datastores.js
+
       - persist_to_workspace:
           root: .
           paths: node_modules
 
   deploy-staging-job:
     docker:
-      - image: tomsaleeba/apex-up-alpine:0.2
+      - image: tomsaleeba/apex-up-alpine:0.3.0
     working_directory: /work
     steps:
       - checkout
@@ -44,7 +50,7 @@ jobs:
 
   deploy-prod-job:
     docker:
-      - image: tomsaleeba/apex-up-alpine:0.2
+      - image: tomsaleeba/apex-up-alpine:0.3.0
     working_directory: /work
     environment:
       - IS_PROD: 1

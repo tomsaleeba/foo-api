@@ -5,11 +5,12 @@
   "description": "a Sails application",
   "keywords": [],
   "dependencies": {
+    "@sailshq/lodash": "^3.10.3",
+    "async": "2.0.1",
     "sails": "^1.0.1",
     "sails-hook-orm": "^2.0.0-16",
     "sails-hook-sockets": "^1.4.0",
-    "@sailshq/lodash": "^3.10.3",
-    "async": "2.0.1"
+    "sails-mongo": "^1.0.0"
   },
   "devDependencies": {
     "@sailshq/eslint": "^4.19.3"

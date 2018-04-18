@@ -48,10 +48,8 @@ module.exports.datastores = {
     *    (See https://sailsjs.com/config/datastores for help.)                 *
     *                                                                          *
     ***************************************************************************/
-    adapter: 'sails-disk',
-    inMemoryOnly: true
-    // url: 'mysql://user:password@host:port/database',
-
+    adapter: 'sails-mongo',
+    url: process.env.MONGO_URL,
   },
 
 
