@@ -1,0 +1,82 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build-job:
+    docker:
+      - image: circleci/node:9.11-stretch
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+        
+      # run tests!
+      - run: yarn test
+      - persist_to_workspace:
+          root: .
+          paths: node_modules
+
+  deploy-staging-job:
+    docker:
+      - image: tomsaleeba/apex-up-alpine:0.2
+    working_directory: /work
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /work
+      - run: sh /entrypoint.sh
+
+  deploy-prod-job:
+    docker:
+      - image: tomsaleeba/apex-up-alpine:0.2
+    working_directory: /work
+    environment:
+      - IS_PROD: 1
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /work
+      - run: sh /entrypoint.sh
+
+workflows:
+  version: 2
+  build-deploy-prod:
+    jobs:
+      - build-job:
+          filters:
+            branches:
+              only: master
+      - deploy-prod-job:
+          requires:
+            - build-job
+          filters:
+            branches:
+              only: master
+  build-deploy-staging:
+    jobs:
+      - build-job:
+          filters:
+            branches:
+              ignore: master
+      - deploy-staging-job:
+          requires:
+            - build-job
+          filters:
+            branches:
+              only: staging
