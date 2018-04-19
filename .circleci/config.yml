@@ -32,7 +32,7 @@ jobs:
       - run:
           name: Monkey patched env var usage so you don't have to buy Apex UP Pro *just* to run this demo
           # you can find out about UP Pro at https://up.docs.apex.sh/#guides.subscribing_to_up_pro
-          command: sed -i "s+process.env.MONGO_URL+'$MONGO_URL'+" config/datastores.js
+          command: bash .circleci/do-env-var-hack.sh
 
       - persist_to_workspace:
           root: .
