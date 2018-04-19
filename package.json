@@ -2,14 +2,15 @@
   "name": "foo-api",
   "private": true,
   "version": "0.0.0",
-  "description": "a Sails application",
+  "description": "a demo Sails application that uses CircleCI for CD",
   "keywords": [],
   "dependencies": {
+    "@sailshq/lodash": "^3.10.3",
+    "async": "2.0.1",
     "sails": "^1.0.1",
     "sails-hook-orm": "^2.0.0-16",
     "sails-hook-sockets": "^1.4.0",
-    "@sailshq/lodash": "^3.10.3",
-    "async": "2.0.1"
+    "sails-mongo": "^1.0.0"
   },
   "devDependencies": {
     "@sailshq/eslint": "^4.19.3"
@@ -23,11 +24,11 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "git://github.com/tom/foo-api.git"
+    "url": "git://github.com/tomsaleeba/foo-api.git"
   },
-  "author": "tom",
-  "license": "",
+  "author": "Tom Saleeba",
+  "license": "MIT",
   "engines": {
-    "node": ">=9.11"
+    "node": ">=8.10"
   }
 }
