@@ -6,7 +6,7 @@ version: 2
 jobs:
   build-job:
     docker:
-      - image: circleci/node:9.11-stretch
+      - image: circleci/node:8.11 # close enough to 8.10 that Lambda uses
     working_directory: ~/repo
 
     steps:

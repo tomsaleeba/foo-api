@@ -27,14 +27,12 @@ Requirements:
 
 Steps:
 1. let's get the MongoDB instance set up. Follow [this guide](https://docs.atlas.mongodb.com/getting-started/) and get a free M0 instance. See the "A note on exposing databases to the internet" section in this README about setting up security groups so Lambda can connect to your DB, then copy the connection URL for your cluster, it'll start with something like `mongodb://username:password@some-shard-00-00-aaaa.mongodb.net:27017,...`
-1. create an account with CircleCi at https://circleci.com/. Probably easiest to use your GitHub account so you have GitHub integration set up.
+1. create an account with CircleCi at https://circleci.com/. It's probably easiest to use your GitHub account so you have GitHub integration set up.
 1. add your AWS credentials to your CircleCI account ([instructions](https://circleci.com/docs/2.0/deployment-integrations/#aws))
 1. define a [project-level environment variable](https://circleci.com/docs/2.0/env-vars/#adding-project-level-environment-variables) `MONGO_URL` with the value set to the mongo connection string you grabbed in the first step. We're going to do some hackery inject this value into the app during build because you need [UP Pro](https://up.docs.apex.sh/#guides.subscribing_to_up_pro) to get [environment variable support](https://up.docs.apex.sh/#commands.env).
 1. [fork](https://help.github.com/articles/fork-a-repo/) this GitHub repo (into your own GitHub account)
 1. in the CircleCI dashboard, select `Add a project`
-1. find your fork of this repo in the list and select `Set up project`
-1. select `Linux` as the OS and `Node` and the language
-1. this repo already has a [workflow](https://github.com/tomsaleeba/foo-api/blob/master/.circleci/config.yml) configured, so you can just press `Start building`, you can ignore their template
+1. find your fork of this repo in the list and select `Build project`. We already have a [workflow](https://github.com/tomsaleeba/foo-api/blob/master/.circleci/config.yml) configured so no need to do anything else
 1. an initial build will be triggered and will take a few minutes. At the end the app will be deployed :D
 
 Now we need to get the URL of the deployed app so we can interact with it. You have two options here: look at the AWS API Gateway dashboard or look at the CircleCI output. We'll document the latter here in the next section; "Get the app URL".
@@ -163,6 +161,8 @@ docker run \
 
 The important part is that we pass the `-e IS_DELETE=1` environment variable to enable "delete mode".
 
+You'll have to manually delete the log files from CloudWatch as `up` doesn't handle them.
+
 ### GitHub
 You can delete your fork on GitHub by following these instructions: https://help.github.com/articles/deleting-a-repository/
 
@@ -175,7 +175,7 @@ You can terminate the cluster by following these instructions: https://docs.atla
 ## Troubleshooting
  - If something goes wrong when you hit your API endpoint, the best place to start is AWS CloudWatch and look for the logs of your Lambda function (probably the `/aws/lambda/foo-api` log group).
 
- - If you add signifiant functionality to this codebase, you might have to edit `up.json` to increase the memory allocated to the Lambda function.
+ - If you add signifiant functionality to this codebase, you might have to edit `up.json` to increase the memory allocated (which also increases CPU) to the Lambda function.
 
 
  - If you get the error message:

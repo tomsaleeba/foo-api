@@ -1,11 +1,11 @@
 {
   "name": "foo-api",
-  "profile": "tomsandbox",
+  "profile": "default",
   "regions": [
-    "ap-southeast-2"
+    "us-east-1"
   ],
   "lambda": {
-    "memory": 256,
+    "memory": 512,
     "runtime": "nodejs8.10"
   }
 }
