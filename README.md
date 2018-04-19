@@ -14,10 +14,10 @@ Just note, this **IS NOT** production ready. You can read the [Sails.js deployme
 **About the continuous deployment support**
 
 This repo is configured to work with CircleCI so changes are automatically deployed as you commit changes. There are two branches:
- 1. `master` which is configured to deploy to the `production` stage
- 1. `staging` which will deploy to the `staging` stage (unsurprisingly)
+ 1. `master` which is configured to deploy to the `production` stage of API Gateway
+ 1. `staging` which will deploy to the `staging` stage (unsurprisingly) of API Gateway
 
-See the "Quickstart with continuous deployment from CircleCI" section in this README to see how to get this running with CircleCI.
+See the [Quickstart with continuous deployment from CircleCI](#quickstart-with-continuous-deployment-from-circleci) section in this README to see how to get this running with CircleCI.
 
 ## Quickstart with continuous deployment from CircleCI
 Requirements:
@@ -26,7 +26,7 @@ Requirements:
  - a MongoDB that's accessible from the internet, see www.mongodb.com/Atlas for a free DB
 
 Steps:
-1. let's get the MongoDB instance set up. Follow [this guide](https://docs.atlas.mongodb.com/getting-started/) and get a free M0 instance. See the "A note on exposing databases to the internet" section in this README about setting up security groups so Lambda can connect to your DB, then copy the connection URL for your cluster, it'll start with something like `mongodb://username:password@some-shard-00-00-aaaa.mongodb.net:27017,...`
+1. let's get the MongoDB instance set up. Follow [this guide](https://docs.atlas.mongodb.com/getting-started/) and get a free M0 instance. See the [A note on exposing databases to the internet](#a-note-on-exposing-databases-to-the-internet) section in this README about setting up security groups so Lambda can connect to your DB, then copy the connection URL for your cluster, it'll start with something like `mongodb://username:password@some-shard-00-00-aaaa.mongodb.net:27017,...`
 1. create an account with CircleCi at https://circleci.com/. It's probably easiest to use your GitHub account so you have GitHub integration set up.
 1. add your AWS credentials to your CircleCI account ([instructions](https://circleci.com/docs/2.0/deployment-integrations/#aws))
 1. define a [project-level environment variable](https://circleci.com/docs/2.0/env-vars/#adding-project-level-environment-variables) `MONGO_URL` with the value set to the mongo connection string you grabbed in the first step. We're going to do some hackery inject this value into the app during build because you need [UP Pro](https://up.docs.apex.sh/#guides.subscribing_to_up_pro) to get [environment variable support](https://up.docs.apex.sh/#commands.env).
@@ -35,7 +35,7 @@ Steps:
 1. find your fork of this repo in the list and select `Build project`. We already have a [workflow](https://github.com/tomsaleeba/foo-api/blob/master/.circleci/config.yml) configured so no need to do anything else
 1. an initial build will be triggered and will take a few minutes. At the end the app will be deployed :D
 
-Now we need to get the URL of the deployed app so we can interact with it. You have two options here: look at the AWS API Gateway dashboard or look at the CircleCI output. We'll document the latter here in the next section; "Get the app URL".
+Now we need to get the URL of the deployed app so we can interact with it. You have two options here: look at the AWS API Gateway dashboard or look at the CircleCI output. We'll document the latter here in the next section; [Get the app URL](#get-the-app-url).
 
 ### Get the app URL
 You may be able to go straight to the `master` builds by replacing `tomsaleeba` with your CircleCI username in https://circleci.com/gh/tomsaleeba/workflows/foo-api/tree/master. Change `/master` with `/staging` for the other workflow. If this doesn't work for you, follow these steps:
@@ -63,7 +63,7 @@ URL of deployment:
 https://aaabbbcccd.execute-api.ap-southeast-2.amazonaws.com/production/
 ```
 
-Your URL is on the last line of that output. See the "Interacting with the API" section of this README for the next steps.
+Your URL is on the last line of that output. See the [Interacting with the API](#interacting-with-the-api) section of this README for the next steps.
 
 ## Quickstart (without continuous deployment from CircleCI)
 Requirements:
@@ -104,7 +104,7 @@ Steps:
       ...
     ```
 
-See the "Interacting with the API" section of this README for the next steps.
+See the [Interacting with the API](#interacting-with-the-api) section of this README for the next steps.
 
 ## Interacting with the API
 1. set the URL of the API that you copied as an environmental variable
@@ -182,7 +182,7 @@ You can terminate the cluster by following these instructions: https://docs.atla
     ```
     Error: cannot find the API, looks like you haven't deployed
     ```
-    ...then run the command to delete the AWS stack to clean up. Then try again. You can find that command in the "Cleaing up" section of this README.
+    ...then run the command to delete the AWS stack to clean up. Then try again. You can find that command in the [Cleaing up](#cleaning-up) section of this README.
 
  - You might have stale Docker images due to [gotchas](https://github.com/moby/moby/issues/13331) in how the `:latest` tag works. Fix this by pulling the newest Docker image:
     ```bash
