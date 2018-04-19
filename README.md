@@ -84,7 +84,7 @@ Steps:
     ```bash
     yarn # or `npm install`
     ```
-1. the deployment tool needs your AWS CLI credentials passed
+1. the deployment tool needs your AWS CLI credentials passed so we'll set them as environment variables in the shell
     ```bash
     AWS_ACCESS_KEY_ID=<your key here>
     AWS_SECRET_ACCESS_KEY=<your secret here>
@@ -96,7 +96,7 @@ Steps:
       -v $(pwd):/work \
       -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
       -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
-      tomsaleeba/apex-up-alpine:0.2
+      tomsaleeba/apex-up-alpine
     ```
 1. the end of the deploy will print out the URL to access your app. Copy this URL, you'll need it later.
 1. you can deploy to production by adding an extra environment variable to the staging deploy command:
@@ -158,8 +158,10 @@ docker run \
   -e AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID \
   -e AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY \
   -e IS_DELETE=1 \
-  tomsaleeba/apex-up-alpine:0.2
+  tomsaleeba/apex-up-alpine
 ```
+
+The important part is that we pass the `-e IS_DELETE=1` environment variable to enable "delete mode".
 
 ### GitHub
 You can delete your fork on GitHub by following these instructions: https://help.github.com/articles/deleting-a-repository/
@@ -171,15 +173,21 @@ You can stop CircleCI from building by following these instructions: https://cir
 You can terminate the cluster by following these instructions: https://docs.atlas.mongodb.com/pause-terminate-cluster/
 
 ## Troubleshooting
-If something goes wrong when you hit your API endpoint, the best place to start is AWS CloudWatch and look for the logs of your Lambda function (probably the `/aws/lambda/foo-api` log group).
+ - If something goes wrong when you hit your API endpoint, the best place to start is AWS CloudWatch and look for the logs of your Lambda function (probably the `/aws/lambda/foo-api` log group).
 
-If you add signifiant functionality to this codebase, you might have to edit `up.json` to increase the memory allocated to the Lambda function.
+ - If you add signifiant functionality to this codebase, you might have to edit `up.json` to increase the memory allocated to the Lambda function.
 
-If you get the error message:
-```
-Error: cannot find the API, looks like you haven't deployed
-```
-...then run the command to delete the AWS stack to clean up. Then try again. You can find that command in the "Cleaing up" section of this README.
+
+ - If you get the error message:
+    ```
+    Error: cannot find the API, looks like you haven't deployed
+    ```
+    ...then run the command to delete the AWS stack to clean up. Then try again. You can find that command in the "Cleaing up" section of this README.
+
+ - You might have stale Docker images due to [gotchas](https://github.com/moby/moby/issues/13331) in how the `:latest` tag works. Fix this by pulling the newest Docker image:
+    ```bash
+    docker pull tomsaleeba/apex-up-alpine
+    ```
 
 ## A note on exposing databases to the internet
 We're going to deploy to AWS Lambda and we don't know the IP that our code will run on. AWS do publish [IP ranges](https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html) but there are a lot of different ranges to account for. The easy solution *for this test* is to [create a whitelist](https://docs.atlas.mongodb.com/security-whitelist/) for MongoDB so `0.0.0.0/0` (anyone) can access the instance. This is a **terrible** idea long term but for this short test, it'll get you going quickly. For long term use, consider something like http://techblog.financialengines.com/2016/09/26/aws-lambdas-with-a-static-outgoing-ip/.
