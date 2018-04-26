@@ -1,0 +1,88 @@
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.0/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/gitgraph.js/1.11.4/gitgraph.min.css" />
+  <style>
+    ol li {
+      margin-bottom: 0.5em;
+    }
+  </style>
+</head>
+<body>
+  <h1>Example git workflow for CI/CD</h1>
+  <p>The points to note are:</p>
+  <ol>
+    <li>every commit in the repo (on any branch) will have CI done: a build and tests are run</li>
+    <li>for each commit to master where CI passes, a deploy to production will happen</li>
+    <li>for each commit to staging where CI passes, a deploy to staging will happen</li>
+    <li>if CI fails on master or staging, no deploy will happen</li>
+    <li>you should do all your work on feature branches and merge to staging to trigger a deploy</li>
+    <li>development will happen locally so staging should contain complete, or at least nearly complete, features</li>
+    <li>if you need to handle a complex merge between staging (includes feature 1) and your feature 2 branch,<br />
+      consider creating a separate branch to handle the merge. That way you keep your feature 2 branch clean<br />
+      but don't lose your work doing the merge when doing future merges.</li>
+  </ol>
+  <canvas id="gitGraph"></canvas>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gitgraph.js/1.11.4/gitgraph.min.js"></script>
+  <script>
+    var myTemplateConfig = {
+      colors: ["#7f8c8d", "#008fb5", "#d35400", "#8e44ad"],
+      branch: {
+        lineWidth: 10,
+        spacingX: 50,
+        showLabel: true,
+        labelRotation: 0,
+        labelFont: "normal 12pt monospace"
+      },
+      commit: {
+        spacingY: -80,
+        dot: {
+          size: 14
+        },
+        message: {
+          displayAuthor: false,
+          displayBranch: true,
+          displayHash: false,
+          font: "normal 12pt monospace"
+        },
+      }
+    }
+    var myTemplate = new GitGraph.Template(myTemplateConfig)
+
+    var config = {
+      template: myTemplate
+    }
+
+    var gitGraph = new GitGraph(config)
+
+    var master = gitGraph.branch("master")
+    master.commit("Initial commit")
+
+    var staging = gitGraph.branch({
+      name: "staging",
+    })
+    staging.commit("setup staging branch")
+
+    var f1 = gitGraph.branch({
+      name: "feature1",
+    })
+    f1.commit('some work on feature 1')
+    f1.commit('more work on feature 1')
+    f1.merge(staging, 'feature 1 ready for QA (CI success, deploy to staging)')
+
+    var f2 = gitGraph.branch({
+      name: "feature2",
+    })
+
+    staging.merge(master, 'feature 1 ready for prod (CI success, deploy to production)')
+
+    f2.commit('some work on feature 2')
+    f2.commit('feature 2 ready for QA (assume a bug is present)')
+    f2.merge(staging, 'feature 2 ready for QA (build fails, no deploy to staging)')
+    f2.commit('fix feature 2 bug from QA')
+    f2.merge(staging, 'feature 2 ready for QA (CI success, deploy to staging)')
+
+    staging.merge(master, 'feature 2 ready for prod (CI success, deploy to production)')
+  </script>
+</body>
+</html>
