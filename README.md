@@ -191,3 +191,8 @@ You can terminate the cluster by following these instructions: https://docs.atla
 
 ## A note on exposing databases to the internet
 We're going to deploy to AWS Lambda and we don't know the IP that our code will run on. AWS do publish [IP ranges](https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html) but there are a lot of different ranges to account for. The easy solution *for this test* is to [create a whitelist](https://docs.atlas.mongodb.com/security-whitelist/) for MongoDB so `0.0.0.0/0` (anyone) can access the instance. This is a **terrible** idea long term but for this short test, it'll get you going quickly. For long term use, consider something like http://techblog.financialengines.com/2016/09/26/aws-lambdas-with-a-static-outgoing-ip/.
+
+## TODOs
+ 1. document how to assign a domain name and SSL either manually in AWS web console or using `up`
+ 1. document how to do rollbacks using `up`
+ 1. create a demo of CircleCI testing if the current schema is compatible with production so we can fail the build if it can't be deployed
