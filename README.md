@@ -2,7 +2,7 @@
 
 a [Sails v1](https://sailsjs.com) application that uses [Apex UP](https://github.com/apex/up) to deploy to AWS Lambda and API Gateway. We also include a [CircleCI](https://circleci.com) config that uses a [Docker container of Apex UP](https://github.com/tomsaleeba/apex-up-alpine) as part of the deployment pipeline for fully automated deployments to two environments: production and staging. The datastore is [MongoDB](www.mongodb.com/Atlas).
 
-![infrastructure diagram](docs/infrastructure.png)
+![infrastructure diagram](docs/infrastructure.svg)
 
 The prototype in the repo has a number of benefits:
  1. fully automated Continuous Integration and Continuous Deployment to two different environments
