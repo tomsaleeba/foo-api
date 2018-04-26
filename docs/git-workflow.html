@@ -10,18 +10,6 @@
 </head>
 <body>
   <h1>Example git workflow for CI/CD</h1>
-  <p>The points to note are:</p>
-  <ol>
-    <li>every commit in the repo (on any branch) will have CI done: a build and tests are run</li>
-    <li>for each commit to master where CI passes, a deploy to production will happen</li>
-    <li>for each commit to staging where CI passes, a deploy to staging will happen</li>
-    <li>if CI fails on master or staging, no deploy will happen</li>
-    <li>you should do all your work on feature branches and merge to staging to trigger a deploy</li>
-    <li>development will happen locally so staging should contain complete, or at least nearly complete, features</li>
-    <li>if you need to handle a complex merge between staging (includes feature 1) and your feature 2 branch,<br />
-      consider creating a separate branch to handle the merge. That way you keep your feature 2 branch clean<br />
-      but don't lose your work doing the merge when doing future merges.</li>
-  </ol>
   <canvas id="gitGraph"></canvas>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gitgraph.js/1.11.4/gitgraph.min.js"></script>
   <script>
