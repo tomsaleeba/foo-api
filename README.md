@@ -156,6 +156,20 @@ Assumption: you've set up CircleCI, that's where the real value is.
 
 From this point on, as a developer, anything you merge into `master` will be deployed to production and likewise for the `staging` branch going to staging. You can create as many other feature branches in your git repo and CircleCI will run the build step, which includes testing and linting, for all those branches. It won't do a deploy though, that only happens for `master` and `staging`. So just merge your feature branch into one of those two when you're ready for it to ship. So easy!
 
+Here are some points to note about this workflow:
+ 1. every commit in the repo (on any branch) will have CI done: a build and tests are run
+ 1. for each commit to `master` where CI passes, a deploy to production will happen
+ 1. for each commit to `staging` where CI passes, a deploy to `staging` will happen
+ 1. if CI fails on `master` or `staging`, no deploy will happen
+ 1. you should do all your work on feature branches and merge to `staging` to trigger a deploy
+ 1. development will happen locally so `staging` should contain complete, or at least nearly complete, features
+ 1. if you need to handle a complex merge between `staging` (includes `feature 1`) and your `feature 2` branch,
+      consider creating a separate branch to handle the merge. That way you keep your `feature 2` branch clean
+      but don't lose your work doing the merge when doing future merges.
+
+...and a diagram showing how it works:
+![git workflow](docs/git-workflow.png)
+
 ## Cleaning up
 ### AWS
 You can delete the AWS stack using the following command, run from the root of this repo:
