@@ -216,7 +216,10 @@ You can terminate the cluster by following these instructions: https://docs.atla
     ```
 
 ## A note on exposing databases to the internet
-We're going to deploy to AWS Lambda and we don't know the IP that our code will run on. AWS do publish [IP ranges](https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html) but there are a lot of different ranges to account for. The easy solution *for this test* is to [create a whitelist](https://docs.atlas.mongodb.com/security-whitelist/) for MongoDB so `0.0.0.0/0` (anyone) can access the instance. This is a **terrible** idea long term but for this short test, it'll get you going quickly. For long term use, consider something like http://techblog.financialengines.com/2016/09/26/aws-lambdas-with-a-static-outgoing-ip/.
+We're going to deploy to AWS Lambda and we don't know the IP that our code will run on because it could be *any* EC2 instance in that region. There are 3 options available:
+ 1. **Recommended for this test:** To easily update your MongoDB Atlas whitelist setting to allow any EC2 instance in your region to access the Mongo instance, use the [mawaws](https://www.npmjs.com/package/mongo-atlas-update-whitelist-for-aws) tool. This isn't perfect because you're still open to an attack from a whole AWS region
+ 1. Use [VPC peering](https://www.mongodb.com/blog/post/introducing-vpc-peering-for-mongodb-atlas) between Atlas and AWS. This is secure but requires you to deploy your Lambda function to a VPC and Apex UP currently (April 2018) can't handle configuring a VPC for you. If you're happy doing some manual configuration, you can use this option.
+ 1. Consider giving your Lambda a [static outgoing IP](http://techblog.financialengines.com/2016/09/26/aws-lambdas-with-a-static-outgoing-ip/) so you only need 1 IP on your Atlas whitelist. This solution also doesn't fit well with the other tools for CD in this prototype so there'll be some manual configuration required.
 
 ## TODOs
  1. document how to assign a domain name and SSL either manually in AWS web console or using `up`
