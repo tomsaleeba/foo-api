@@ -10,6 +10,7 @@ The prototype in the repo has a number of benefits:
  1. cost effective and scalable serverless hosting through AWS Lambda
  1. easy to apply a domain and SSL certificate to using API Gateway [custom domain names](https://docs.aws.amazon.com/apigateway/latest/developerguide/how-to-custom-domains.html)
  1. minimal attack surface as the app is serverless
+ 1. deployment and issue monitoring from http://rollbar.com
 
 Just note, this **IS NOT** production ready. You can read the [Sails.js deployment documentation](https://sailsjs.com/documentation/concepts/deployment) for some ideas on how to get production ready.
 
@@ -40,10 +41,11 @@ Requirements:
 Steps:
 1. let's get the MongoDB instance set up. Follow [this guide](https://docs.atlas.mongodb.com/getting-started/) and get a free M0 instance. See the [A note on exposing databases to the internet](#a-note-on-exposing-databases-to-the-internet) section in this README about setting up security groups so Lambda can connect to your DB, then copy the connection URL for your cluster, it'll start with something like `mongodb://username:password@some-shard-00-00-aaaa.mongodb.net:27017,...`
 1. create an account with CircleCi at https://circleci.com/. It's probably easiest to use your GitHub account so you have GitHub integration set up.
-1. add your AWS credentials to your CircleCI account ([instructions](https://circleci.com/docs/2.0/deployment-integrations/#aws))
-1. define a [project-level environment variable](https://circleci.com/docs/2.0/env-vars/#adding-project-level-environment-variables) `MONGO_URL` with the value set to the mongo connection string you grabbed in the first step. We're going to do some hackery inject this value into the app during build because you need [UP Pro](https://up.docs.apex.sh/#guides.subscribing_to_up_pro) to get [environment variable support](https://up.docs.apex.sh/#commands.env).
 1. [fork](https://help.github.com/articles/fork-a-repo/) this GitHub repo (into your own GitHub account)
 1. in the CircleCI dashboard, select `Add a project`
+1. add your AWS credentials as environment variable in your CircleCI account ([instructions](https://circleci.com/docs/2.0/deployment-integrations/#aws))
+1. define a [project-level environment variable](https://circleci.com/docs/2.0/env-vars/#adding-project-level-environment-variables) `MONGO_URL` with the value set to the mongo connection string you grabbed in the first step.
+1. optionally, sign up with https://rollbar.com for an account, then add the (`post_server_item` API key)[https://docs.rollbar.com/reference#section-authentication] from Rollbar as an environment variable in CircleCI, named `ROLLBAR_ACCESS_TOKEN`
 1. find your fork of this repo in the list and select `Build project`. We already have a [workflow](https://github.com/tomsaleeba/foo-api/blob/master/.circleci/config.yml) configured so no need to do anything else
 1. an initial build will be triggered and will take a few minutes. At the end the app will be deployed :D
 

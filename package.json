@@ -8,6 +8,7 @@
     "@afidoss/sails-hook-swagger": "^1.1.15",
     "@sailshq/lodash": "^3.10.3",
     "async": "2.0.1",
+    "rollbar": "^2.4.5",
     "sails": "^1.0.1",
     "sails-hook-orm": "^2.0.0-16",
     "sails-hook-sockets": "^1.4.0",

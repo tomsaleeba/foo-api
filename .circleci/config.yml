@@ -29,11 +29,6 @@ jobs:
       # run tests!
       - run: yarn test
 
-      - run:
-          name: Monkey patched env var usage so you don't have to buy Apex UP Pro *just* to run this demo
-          # you can find out about UP Pro at https://up.docs.apex.sh/#guides.subscribing_to_up_pro
-          command: bash .circleci/do-env-var-hack.sh
-
       - persist_to_workspace:
           root: .
           paths:
@@ -42,25 +37,36 @@ jobs:
 
   deploy-staging-job:
     docker:
-      - image: tomsaleeba/apex-up-alpine:0.3.0
+      - image: tomsaleeba/apex-up-alpine:0.3.5
     working_directory: /work
+    environment:
+      - ROLLBAR_ENV: staging
     steps:
       - checkout
       - attach_workspace:
           at: /work
-      - run: sh /entrypoint.sh
+      - run:
+          command: |
+            sh .circleci/env-to-local.sh
+            sh /entrypoint.sh
+            sh .circleci/rollbar-deploy-notifier.sh
 
   deploy-prod-job:
     docker:
-      - image: tomsaleeba/apex-up-alpine:0.3.0
+      - image: tomsaleeba/apex-up-alpine:0.3.5
     working_directory: /work
     environment:
+      - ROLLBAR_ENV: production
       - IS_PROD: 1
     steps:
       - checkout
       - attach_workspace:
           at: /work
-      - run: sh /entrypoint.sh
+      - run:
+          command: |
+            sh .circleci/env-to-local.sh
+            sh /entrypoint.sh
+            sh .circleci/rollbar-deploy-notifier.sh
 
 workflows:
   version: 2
