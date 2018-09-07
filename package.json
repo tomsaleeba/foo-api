@@ -5,6 +5,7 @@
   "description": "a demo Sails application that uses CircleCI for CD",
   "keywords": [],
   "dependencies": {
+    "@afidoss/sails-hook-swagger": "^1.1.15",
     "@sailshq/lodash": "^3.10.3",
     "async": "2.0.1",
     "sails": "^1.0.1",

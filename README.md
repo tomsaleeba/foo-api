@@ -118,6 +118,25 @@ Steps:
 
 See the [Interacting with the API](#interacting-with-the-api) section of this README for the next steps.
 
+## Quickstart (running locally)
+
+ 1. install all the dependencies
+    ```bash
+    yarn
+    ```
+ 1. start a MongoDB locally, using Docker
+    ```bash
+    docker run -p 27017:27017 --name foo-mongo -d mongo
+    ```
+ 1. set the environment varaible so Sails knows where the DB lives
+    ```bash
+    export MONGO_URL='mongodb://localhost/foo'
+    ```
+ 1. start sails
+    ```bash
+    sails lift
+    ```
+
 ## Interacting with the API
 1. set the URL of the API that you copied as an environmental variable
     ```bash
@@ -152,6 +171,9 @@ The following steps will **only** work against `staging`:
     ```bash
     curl $THE_URL/bar
     ```
+
+## Swagger
+This project contains a plugin to automatically generate a swagger definition. When you start the server, it will generate a fresh definition. You can see the raw JSON at http://localhost:1337/api-docs.json or the swagger-ui at http://localhost:1337/api/docs.
 
 ## Developer workflow
 Assumption: you've set up CircleCI, that's where the real value is.
